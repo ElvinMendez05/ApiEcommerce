@@ -81,7 +81,7 @@ namespace ApiEcommerce.Controllers
             return CreatedAtRoute("GetCategory", new { id = category.Id }, category);
         }
 
-        [HttpPatch("(id:int)", Name = "UpdateCategory")]
+        [HttpPatch("id", Name = "UpdateCategory")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -117,7 +117,7 @@ namespace ApiEcommerce.Controllers
             return NoContent();
         }
 
-        [HttpDelete("(id:int)", Name = "DeleteCategory")]
+        [HttpDelete("id:int", Name = "DeleteCategory")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

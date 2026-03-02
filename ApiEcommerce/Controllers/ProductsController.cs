@@ -70,9 +70,9 @@ namespace ApiEcommerce.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_categoryRepository.CategoryExists(createProductDto.Name))
+            if (!_categoryRepository.CategoryExists(createProductDto.CategoryId))
             {
-                ModelState.AddModelError("Customer", $"The category with id {createProductDto.CategoryId} is already exist");
+                ModelState.AddModelError("Customer", $"The category with the id {createProductDto.CategoryId} is already exist");
                 return BadRequest(ModelState);
             }
 
@@ -84,9 +84,47 @@ namespace ApiEcommerce.Controllers
             }
 
             var createdProduct = _productRepository.GetProduct(product.ProductId);
-            var productDto = _mapper.Map<Product>(createdProduct);
+            var productDto = _mapper.Map<ProductDto>(createdProduct);
 
-            return CreatedAtRoute("GetCategory", new { productId = product.ProductId }, product);
+            return CreatedAtRoute("GetProduct", new { productId = product.ProductId }, productDto);
         }
+
+        [HttpGet("searchProductByCategory/{categoryId:int}", Name = "GetProductsByCategory")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetProductsForCategory(int categoryId)
+        {
+            var product = _productRepository.GetProductsForCategory(categoryId);
+
+            if (product.Count == 0)
+            {
+                return NotFound($"The productS with the category {categoryId} it doesn't exist");
+            }
+            
+            var productDto = _mapper.Map<List<ProductDto>>(product);
+            return Ok(productDto);
+        }
+
+        [HttpGet("searchProductByName/{searchTerm}", Name = "GetProductsByName")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetProductsByName(string searchTerm)
+        {
+            var product = _productRepository.SearchProducts(searchTerm);
+
+            if (product.Count == 0)
+            {
+                return NotFound($"The product with the name {searchTerm} it doesn't exist");
+            }
+
+            var productDto = _mapper.Map<List<ProductDto>>(product);
+            return Ok(productDto);
+        }
+
+
     }
 }
