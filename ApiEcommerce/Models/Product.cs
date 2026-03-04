@@ -26,7 +26,7 @@ namespace ApiEcommerce.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        //Relationship between  Category and Product 
+        //Relationship between Category and Product 
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public required Category Category { get; set; }
