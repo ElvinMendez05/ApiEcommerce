@@ -1,6 +1,7 @@
 ﻿namespace ApiEcommerce.Constants
 {
-    public class PolicyName
+    public static class PolicyName
     {
+        public const string AllowSpecificOrigin = "AllowSpecificOrigin";
     }
 }

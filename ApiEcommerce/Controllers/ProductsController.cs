@@ -145,7 +145,7 @@ namespace ApiEcommerce.Controllers
             }
 
             if (!_productRepository.BuyProduct(name, quantity)) { 
-                ModelState.AddModelError("CustomerError", $"It couldn't buy the product {name} the quantity requested is not available in stock");
+                ModelState.AddModelError("CustomerError", $"It couldn't buy product {name} the quantity requested is not available in stock");
                 return BadRequest(ModelState);
             }
 
@@ -175,7 +175,7 @@ namespace ApiEcommerce.Controllers
 
             if (!_categoryRepository.CategoryExists(updateProductDto.CategoryId))
             {
-                ModelState.AddModelError("Customer", $"The category with the id {updateProductDto.CategoryId} is already exist");
+                ModelState.AddModelError("Customer", $"The category with {updateProductDto.CategoryId} is already exist");
                 return BadRequest(ModelState);
             }
 
@@ -186,7 +186,6 @@ namespace ApiEcommerce.Controllers
                 ModelState.AddModelError("Customer", $"Something went wrong saving register {product.Name}");
                 return StatusCode(500, ModelState);
             }
-
             return NoContent();
         }
 
@@ -206,7 +205,7 @@ namespace ApiEcommerce.Controllers
 
             if (product == null)
             {
-                return NotFound($"The product with the id {productId} it doesn't exist");
+                return NotFound($"The product with {productId} it doesn't exist");
             }
 
             if (!_productRepository.DeleteProduct(product))
@@ -214,8 +213,6 @@ namespace ApiEcommerce.Controllers
                 ModelState.AddModelError("Customer", $"Something went wrong saving register {product.Name}");
                 return StatusCode(500, ModelState);
             }
-
-
             return NoContent();
         }
     }

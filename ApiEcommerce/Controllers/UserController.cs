@@ -1,9 +1,6 @@
-﻿using ApiEcommerce.Constants;
-using ApiEcommerce.Models.Dtos;
-using ApiEcommerce.Repository;
+﻿using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository.Interface;
 using AutoMapper;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEcommerce.Controllers
@@ -47,7 +44,6 @@ namespace ApiEcommerce.Controllers
         {
             if (createUserDto == null || !ModelState.IsValid)
             {
-
                 return BadRequest(ModelState);
             }
             if (string.IsNullOrWhiteSpace(createUserDto.Username))
@@ -84,5 +80,4 @@ namespace ApiEcommerce.Controllers
             return Ok(user);
         }
     }
-
 }
