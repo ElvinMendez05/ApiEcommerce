@@ -14,6 +14,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 //Injecting Repository
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRespository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 //Adding Mapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

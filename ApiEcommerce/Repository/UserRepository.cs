@@ -47,7 +47,6 @@ namespace ApiEcommerce.Repository
                     Message = "El Username es requerido"
                 };
             }
-            
             var user = await _db.Users.FirstOrDefaultAsync<User>(u => u.UserName.ToLower().Trim() == userLoginDto.Username.ToLower().Trim());
             if (user == null) 
             {
@@ -68,7 +67,6 @@ namespace ApiEcommerce.Repository
                     Message = "Credenciales son incorrectas"
                 };
             }
-
             //JWT
             var handlerToken = new JwtSecurityTokenHandler();
             if (string.IsNullOrWhiteSpace(secretKey)) 
