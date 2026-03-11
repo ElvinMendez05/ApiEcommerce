@@ -36,6 +36,73 @@ namespace ApiEcommerce.Repository
             return !_db.Users.Any(u => u.UserName.ToLower().Trim() == username.ToLower().Trim());
         }
 
+        //public async Task<UserLoginResponseDto> Login(UserLoginDto userLoginDto)
+        //{
+        //    if (string.IsNullOrEmpty(userLoginDto.Username))
+        //    {
+        //        return new UserLoginResponseDto()
+        //        {
+        //            Token = "",
+        //            User = null,
+        //            Message = "El Username es requerido"
+        //        };
+        //    }
+        //    var user = await _db.Users.FirstOrDefaultAsync<User>(u => u.UserName.ToLower().Trim() == userLoginDto.Username.ToLower().Trim());
+        //    if (user == null) 
+        //    {
+        //        return new UserLoginResponseDto()
+        //        {
+        //            Token = "",
+        //            User = null,
+        //            Message = "El Username no encontrado"
+        //        };
+        //    }
+
+        //    if (!BCrypt.Net.BCrypt.Verify(userLoginDto.Password, user.Password))
+        //    {
+        //        return new UserLoginResponseDto()
+        //        {
+        //            Token = "",
+        //            User = null,
+        //            Message = "Credenciales son incorrectas"
+        //        };
+        //    }
+        //    //JWT
+        //    var handlerToken = new JwtSecurityTokenHandler();
+        //    if (string.IsNullOrWhiteSpace(secretKey)) 
+        //    {
+        //        throw new InvalidOperationException("SecretKey is not configured");
+        //    }
+
+        //    var key = Encoding.UTF8.GetBytes(secretKey);
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[]
+        //        {
+        //            new Claim("id", user.Id.ToString()),
+        //            new Claim("username", user.UserName),
+        //            new Claim(ClaimTypes.Role, user.Role ?? string.Empty),
+        //        }),
+        //        Expires = DateTime.UtcNow.AddHours(2),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //    };
+
+        //    var token = handlerToken.CreateToken(tokenDescriptor);
+
+        //    return new UserLoginResponseDto()
+        //    {
+
+        //        User = new UserRegisterDto()
+        //        {
+        //            Username = user.UserName,
+        //            Name = user.Name,
+        //            Role = user.Role,
+        //            Password = user.Password ?? ""
+        //        },
+        //        Message = "User logged correctly"
+        //    };
+        //}
+
         public async Task<UserLoginResponseDto> Login(UserLoginDto userLoginDto)
         {
             if (string.IsNullOrEmpty(userLoginDto.Username))
@@ -44,20 +111,19 @@ namespace ApiEcommerce.Repository
                 {
                     Token = "",
                     User = null,
-                    Message = "El Username es requerido"
+                    Message = "El Username es requerido "
                 };
             }
             var user = await _db.Users.FirstOrDefaultAsync<User>(u => u.UserName.ToLower().Trim() == userLoginDto.Username.ToLower().Trim());
-            if (user == null) 
+            if (user == null)
             {
                 return new UserLoginResponseDto()
                 {
                     Token = "",
                     User = null,
-                    Message = "El Username no encontrado"
+                    Message = "Username no encontrado"
                 };
             }
-
             if (!BCrypt.Net.BCrypt.Verify(userLoginDto.Password, user.Password))
             {
                 return new UserLoginResponseDto()
@@ -67,31 +133,29 @@ namespace ApiEcommerce.Repository
                     Message = "Credenciales son incorrectas"
                 };
             }
-            //JWT
+            // JWT
             var handlerToken = new JwtSecurityTokenHandler();
-            if (string.IsNullOrWhiteSpace(secretKey)) 
+            if (string.IsNullOrWhiteSpace(secretKey))
             {
-                throw new InvalidOperationException("SecretKey is not configured");
+                throw new InvalidOperationException("SecretKey no esta configurada");
             }
-            
             var key = Encoding.UTF8.GetBytes(secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim("id", user.Id.ToString()),
-                    new Claim("username", user.UserName),
-                    new Claim(ClaimTypes.Role, user.Role ?? string.Empty),
-                }),
+              {
+                    new Claim("id",user.Id.ToString()),
+                    new Claim("Username",user.UserName),
+                    new Claim(ClaimTypes.Role,user.Role ?? string.Empty),
+                  }
+              ),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-
             var token = handlerToken.CreateToken(tokenDescriptor);
-
             return new UserLoginResponseDto()
             {
-
+                Token = handlerToken.WriteToken(token),
                 User = new UserRegisterDto()
                 {
                     Username = user.UserName,
@@ -99,8 +163,9 @@ namespace ApiEcommerce.Repository
                     Role = user.Role,
                     Password = user.Password ?? ""
                 },
-                Message = "User logged correctly"
+                Message = "Usuario logueado correctamente"
             };
+
         }
 
         public async Task<User> Register(CreateUserDto createUserDto)

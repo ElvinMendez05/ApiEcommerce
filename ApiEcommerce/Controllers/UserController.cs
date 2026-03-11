@@ -1,13 +1,16 @@
-﻿using ApiEcommerce.Models.Dtos;
+﻿using ApiEcommerce.Constants;
+using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository;
 using ApiEcommerce.Repository.Interface;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEcommerce.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    //[EnableCors(PolicyName.AllowSpecificOrigin)]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -39,7 +42,7 @@ namespace ApiEcommerce.Controllers
             return Ok(userDto);
         }
 
-        [HttpPost(Name = "RegisterUser")]
+        [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
         {
             if (createUserDto == null || !ModelState.IsValid)
@@ -65,7 +68,7 @@ namespace ApiEcommerce.Controllers
             return CreatedAtRoute("GetUser", new { userId = result.Id }, result);
         }
 
-        [HttpPost(Name = "LoginUser")]
+        [HttpPost("LoginUser")]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
         {
             if (userLoginDto == null || !ModelState.IsValid)

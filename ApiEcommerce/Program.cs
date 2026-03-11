@@ -16,7 +16,6 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRespository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-
 //Adding Mapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -25,6 +24,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
+
+builder.Services.AddCors(options =>
+   {
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("*").AllowAnyMethod().AllowAnyMethod();
+        });
+    }
+); 
 
 var app = builder.Build();
 
@@ -37,6 +46,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
 
