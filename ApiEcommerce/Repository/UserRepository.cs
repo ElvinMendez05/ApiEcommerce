@@ -90,7 +90,7 @@ namespace ApiEcommerce.Repository
             };
 
             var token = handlerToken.CreateToken(tokenDescriptor);
-            
+
             return new UserLoginResponseDto()
             {
 
@@ -101,11 +101,8 @@ namespace ApiEcommerce.Repository
                     Role = user.Role,
                     Password = user.Password ?? ""
                 },
-                Message = ""
-
-            }
-
-        
+                Message = "User logged correctly"
+            };
         }
 
         public async Task<User> Register(CreateUserDto createUserDto)

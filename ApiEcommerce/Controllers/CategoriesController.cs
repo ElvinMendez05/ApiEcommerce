@@ -137,7 +137,6 @@ namespace ApiEcommerce.Controllers
                 return NotFound($"The category with the id {id} it doesn't exist");
             }
 
-
             if (!_categoryRepository.DeleteCategory(category))
             {
                 ModelState.AddModelError("Customer", $"Something went wrong removing register {category.Name}");
