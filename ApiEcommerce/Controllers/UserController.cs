@@ -1,13 +1,14 @@
 ﻿using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository.Interface;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEcommerce.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
-    //[EnableCors(PolicyName.AllowSpecificOrigin)]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -39,6 +40,7 @@ namespace ApiEcommerce.Controllers
             return Ok(userDto);
         }
 
+        [AllowAnonymous]
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
         {
@@ -64,6 +66,7 @@ namespace ApiEcommerce.Controllers
             return CreatedAtRoute("GetUser", new { userId = result.Id }, result);
         }
 
+        [AllowAnonymous]
         [HttpPost("LoginUser")]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
         {
