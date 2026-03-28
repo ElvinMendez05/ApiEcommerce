@@ -7,11 +7,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiEcommerce.Controllers
+namespace ApiEcommerce.Controllers.V1
 {
     [Authorize(Roles = "Admin")]
     [Route("api/v{version:apiVersion}[controller]")]
-    [ApiVersionNeutral]
+    [ApiVersion("1.0")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -28,6 +28,7 @@ namespace ApiEcommerce.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Obsolete("This method is obsolete, instead of use version v2")]
         public IActionResult GetCategories()
         {
             var categories = _categoryRepository.GetCategories();

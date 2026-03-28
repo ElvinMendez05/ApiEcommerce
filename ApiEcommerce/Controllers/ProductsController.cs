@@ -1,6 +1,7 @@
 ﻿using ApiEcommerce.Models;
 using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository.Interface;
+using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiEcommerce.Controllers
 {
     [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}[controller]")]
+    [ApiVersionNeutral]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -157,12 +159,11 @@ namespace ApiEcommerce.Controllers
             return Ok($"It bought {quantity} {units} of the product '{name}'");
         }
 
-        [HttpPut("productId:int", Name = "UpdateProduct")]
+        [HttpPut("{productId:int}", Name = "UpdateProduct")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult UpdateProduct(int productId, [FromBody] UpdateProductDto updateProductDto)
         {
@@ -170,24 +171,21 @@ namespace ApiEcommerce.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if (_productRepository.ProductExists(productId))
+            if (!_productRepository.ProductExists(productId))
             {
-                ModelState.AddModelError("Customer", "The product it doesn't exist");
+                ModelState.AddModelError("CustomError", "El producto no existe");
                 return BadRequest(ModelState);
             }
-
             if (!_categoryRepository.CategoryExists(updateProductDto.CategoryId))
             {
-                ModelState.AddModelError("Customer", $"The category with {updateProductDto.CategoryId} is already exist");
+                ModelState.AddModelError("CustomError", $"La categoría con el {updateProductDto.CategoryId} no existe");
                 return BadRequest(ModelState);
             }
-
             var product = _mapper.Map<Product>(updateProductDto);
             product.ProductId = productId;
             if (!_productRepository.UpdateProduct(product))
             {
-                ModelState.AddModelError("Customer", $"Something went wrong saving register {product.Name}");
+                ModelState.AddModelError("CustomError", $"Algo salió mal al actualizar el registro {product.Name}");
                 return StatusCode(500, ModelState);
             }
             return NoContent();

@@ -7,11 +7,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiEcommerce.Controllers
+namespace ApiEcommerce.Controllers.V2
 {
     [Authorize(Roles = "Admin")]
     [Route("api/v{version:apiVersion}[controller]")]
-    [ApiVersionNeutral]
+    [ApiVersion("2.0")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -28,13 +28,13 @@ namespace ApiEcommerce.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetCategories()
+        public IActionResult GetCategoriesOrderById()
         {
-            var categories = _categoryRepository.GetCategories();
+            var categories = _categoryRepository.GetCategories().OrderBy(cat => cat.Id);
             var categoriesDto = new List<CategoryDto>();
-            foreach (var category in categories) 
-            { 
-               categoriesDto.Add(_mapper.Map<CategoryDto>(category));
+            foreach (var category in categories)
+            {
+                categoriesDto.Add(_mapper.Map<CategoryDto>(category));
             }
             return Ok(categoriesDto);
         }
